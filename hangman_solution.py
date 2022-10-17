@@ -51,7 +51,7 @@ class Hangman:
 
     #Pick a random word from the word_list
         word = ""
-        list word_guessed
+        lword_guessed
         int num_letters = 0 
         int num_lives = 5
         list list_letters = {} 
