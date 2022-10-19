@@ -1,63 +1,71 @@
 
+from ast import Break
 import random
 from curses.ascii import isalpha
 from operator import truediv
 
+# Start the game 
+
 print("\nWelcome to Hangman\n")
 
 class Hangman:
-    def __init__(word_list, num_lives): 
-        word = random.choice(word_list)
-        word_guessed = list("_" * len(Hangman.word))
-        num_lives = 5  
-        list_of_guesses =[]
 
+    def __init__(self,word_list,num_lives=5): 
+            self.word = random.choice(word_list)
+            self.word_guessed = list("_" * len(self.word))
+            self.num_lives = num_lives
+            self.list_of_guesses =[]
+            self.num_letters = len(self.word)
 
-def play_game():
-    word_list = ['apple', 'banana', 'orange', 'pear', 'strawberry']
-    game = Hangman(word_list,num_lives)
-    game_on = True
-    while game_on:
-        if num_lives == 0:
-            print("You lost")
-            game_on = False
-        if num_letters > 0 :
-            ask_for_input()
-
-        if num_lives !=0 and and num_letters not > 0 :
-            print("Congratulations for winning the game")
-
-
-def ask_for_input():   
-    alpha_input = True
-    while alpha_input: 
-        guess = input(print("type in a valid character"))
-        if guess.isalpha() != True and guess.len() !=1 : 
+    def ask_for_input(self):   
+         
+        guess = input("Guess a letter: ")
+        if not guess.isalpha() or len(guess) !=1 : 
             print("Invalid letter. Please, enter a single alphabetical character.")
-            ask_for_input()
-        elif guess in list_of_guesses    :
+        elif guess in self.list_of_guesses :
             print("You already tried that letter!")
-            ask_for_input()
         else   : 
-            check_guess()
+            self.check_guess(guess)
 
+            
+            
 
-def check_guess(guess):
-    guess.islower()
-    if index != -1: 
-        print("Sorry, {guess} is not in the word. Try again.")
-        num_lives = num_lives-1
-        print("You have {num_lives} lives left.")
-    else: 
-        print("Good guess! {guess} is in the word.")
-    
-    if guess not in list_of_guesses:
-            list_of_guesses.append(guess)       
-
+    def check_guess(self,guess):
+        guess = guess.lower()
         
-    for guess in word[::]:
-        word = word[:index] + "_" + word[index + 1:]
-        display = display[:index] + guess + display[index + 1:]
-        print(display + "\n")
+        if guess in self.list_of_guesses:
+            print(f"{guess} has been tried before - try another letter") 
+            self.num_lives -= 1 
+        elif guess in self.word: 
+            print(f"Good guess! {guess} is in the word.")
+            for index,letter in enumerate(self.word):
+                if guess == letter:
+                    self.word_guessed[index]= letter 
+            self.num_letters -= 1
+            ## self.list_of_guesses.append(guess)
+            print(self.word_guessed)
+        else :
+            print(f"Sorry, {guess} is not in the word. Try again.")
+            self.num_lives = self.num_lives - 1
+            print(f"You have {self.num_lives} lives left.")
+        self.list_of_guesses.append(guess)
 
+
+def play_game(word_list):
+    ##word_list = ['apple', 'banana', 'orange', 'pear', 'strawberry']
+    ##word_list = ['banana']
+    game = Hangman(word_list)
+  
+    while True:
+        if game.num_lives == 0:
+            print("You've lost - better luck next time")
+            break
+        elif game.num_letters > 0 :
+            game.ask_for_input()      
+        else :
+            print("Congratulations for winning the game")
+            break
+        
+
+play_game(['banana'])       
 
